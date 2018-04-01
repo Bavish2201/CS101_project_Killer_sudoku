@@ -24,7 +24,7 @@ struct cell {
 
 
 void solve_sudoku(cage,cell,int);
-void print_board(cell);
+void print_board(cell [9][9]);
 
 void solve_sudoku(cage Cage[],cell board[9][9],int no_of_cage)
 {
@@ -37,10 +37,14 @@ void solve_sudoku(cage Cage[],cell board[9][9],int no_of_cage)
             {
                 int row = Cage[cage_id].cells[0]/10 ;
                 int col = Cage[cage_id].cells[0]%10 ;
-                board[row][col] = Cage[cage_id].sum ;
+                board[row][col].value = Cage[cage_id].sum ;
             }
     }
 
+    for(int i=0;i<9;i++)
+    {
+
+    }
 
 }
 
