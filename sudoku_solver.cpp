@@ -103,6 +103,7 @@ bool FindUnassignedLocation(cell board[9][9], int &row, int &col)
     return false;
 }
 
+
 /* Returns true if there is no conflict in the row while assigning a number
  * returns false if the number is already used.
  */
@@ -113,6 +114,7 @@ bool UsedInRow(cell board[9][9], int row, int num)
             return true;
     return false;
 }
+
 
 /* Returns true if there is no conflict in the column while assigning a number
  * returns false if the number is already used.
@@ -125,6 +127,7 @@ bool UsedInCol(cell board[9][9], int col, int num)
     return false;
 }
 
+
 /* Returns a boolean which indicates whether any assigned entry
  * within the specified 3x3 box matches the given number.
  */
@@ -136,18 +139,18 @@ bool UsedInBox(cell board[9][9], int boxStartRow, int boxStartCol, int num)
                 return true;
     return false;
 }
-/*Returns a true if there is no conflict in assigning a number to a cage
-   Else return false if number already exist in the cage.
+
+
+/*Returns a true if the number is already present in the cage
+   Else returns false
 */
-bool UsedInCage(cell board[9][9], cage Cage[], int row, int col, int num)
+bool UsedInCage(cell board[9][9], cage Cage, int num)
 {
-    //for(int
-    int cage_id = board[row][col].cage_id ;
-    int no_of_cells = Cage[cage_id].capacity  ;
+    int no_of_cells = Cage.capacity  ;
     for(int cell=0; cell < no_of_cells; cell++)
     {
-         int row = Cage[cage_id].cells[cell]/10 ;
-         int col = Cage[cage_id].cells[cell]%10 ;
+         int row = Cage.cells[cell]/10 ;
+         int col = Cage.cells[cell]%10 ;
             if(board[row][col].value == num )
                 return true ;
     }
@@ -162,10 +165,11 @@ bool isSafe(cell board[9][9], cage Cage[], int row, int col, int num)
 {
     /* Check if 'num' is not already placed in current row,
        current column and current 3x3 box */
+    int cage_id = board[row][col].cage_id;
     return !UsedInRow(board, row, num) &&
            !UsedInCol(board, col, num) &&
            !UsedInBox(board, row - row%3 , col - col%3, num) &&
-           !UsedInCage(board, Cage, row, col, num) ;
+           !UsedInCage(board, Cage[cage_id], num) ;
 }
 
 
@@ -178,6 +182,7 @@ void print_board(cell board[][9])
         cout<<"\n" ;
     }
 }
+
 
 /* checks whether the sum of all the cells in a cage
  * equals the cage sum and returns true if it is.
@@ -195,6 +200,7 @@ bool isCageSumSatisfied(cage Cage) {
 	else
 		return false;
 }
+
 
 /* Checks whether all the cells in a particular cage are filled.
  * returns true if they are filled
