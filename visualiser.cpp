@@ -1,4 +1,5 @@
 #include <iostream>
+#include <windows.h>
 using namespace std;
 
 /* each cage will be assigned a unique id.
@@ -11,7 +12,7 @@ using namespace std;
 struct cage
 {
 	int sum, capacity;
-	int cells[];
+	int cells[81];
 };
 
 /* If a cell is not assigned any number, then value = 0.
@@ -21,78 +22,15 @@ struct cell {
 	int value;
 	int cage_id;
 };
- 
 
-bool solve_sudoku(cage[], cell[9][9]);
+
+bool solve_sudoku(cage[],cell[9][9]);
 void print_board(cell[9][9]);
-bool FindUnassignedLocation(cell[9][9], int, int);
-bool isSafe(cell[9][9], cage[], int, int, int);
-bool isCageFilled(cage);
-bool isCageSumSatisfied(cage);
+bool isCageFilled(cage, cell[9][9]);
+bool isCageSumSatisfied(cage, cell[9][9]);
 
-int main() {
 
-	cell Board[9][9];
 
-	//initialize board
-	for (int i=0; i<9; i++)
-		for (int j=0; j<9; j++)
-			Board[i][j].value = 0;
-
-	//read input
-	int no_of_cages;
-	cin>>no_of_cages;
-	cage Cage[no_of_cages];
-
-	for (int cage_id = 0; cage_id<no_of_cages; cage_id++) {
-
-		int cage_sum, no_of_cells;
-		cin >> no_of_cells >> cage_sum;
-
-		Cage[cage_id].sum = cage_sum;
-		Cage[cage_id].capacity = no_of_cells;
-
-		for (int j=0; j<no_of_cells; j++) {
-			int row, col;
-			cin >> row >> col;
-
-			Cage[cage_id].cells[j] = row*10 + col;
-			Board[row][col].cage_id = cage_id;
-
-		}
-
-	}
-
-	if(solve_sudoku()) {
-		print_board(Board);
-	}
-	else {
-		
-	}
-    
-	return 0;
-}
-
-bool solve_sudoku(cage Cage[],cell board[9][9])
-{
-    int row, col;
-    if(!FindUnassignedLocation(board, row, col)) return true;
-    cage currentCage = Cage[board[row][col].cage_id];
-        
-    for (int num=1; num<=9; num++) {
-        if (isSafe(board, Cage, row, col, num)) {
-            board[row][col].value = num;
-            
-            if (isCageSumSatisfied(currentCage, board)){
-                
-                solve_sudoku(Cage, board);
-            }
-        }
-        board[row][col].value = 0;
-    }
-    return false;
-
-}
 
 
 /* Searches the grid to find a cell that is still unassigned.
@@ -195,17 +133,17 @@ void print_board(cell board[][9])
  * else returns false
  */
 bool isCageSumSatisfied(cage Cage, cell board[9][9]) {
-	if (!isCageFilled(Cage)) return true;
+	if (!isCageFilled(Cage, board)) {return true;}
 	int sum = 0, row, col;
 	for (int cell=0; cell<Cage.capacity; cell++) {
-		row = Cage.cells[cell]/10;
-		col = Cage.cells[cell]%10;
+	    row = Cage.cells[cell]/10;
+	    col = Cage.cells[cell]%10;
 		sum += board[row][col].value;
 	}
 	if (sum == Cage.sum)
-		return true;
+		{ return true;}
 	else
-		return false;
+		{return false;}
 }
 
 
@@ -214,13 +152,77 @@ bool isCageSumSatisfied(cage Cage, cell board[9][9]) {
  * else returns false
  */
 bool isCageFilled(cage Cage, cell board[9][9]) {
-	int row, col;
 	for (int cell=0; cell<Cage.capacity; cell++) {
-		row = Cage.cells[cell]/10;
-		col = Cage.cells[cell]%10;
+	    int row, col;
+	    row = Cage.cells[cell]/10;
+	    col = Cage.cells[cell]%10;
 		if (board[row][col].value == 0)
 			return false;
 	}
 	return true;
 }
 
+int main() {
+
+	cell Board[9][9];
+
+	//initialize board
+	for (int i=0; i<9; i++)
+		for (int j=0; j<9; j++)
+			Board[i][j].value = 0;
+
+	//read input
+	int no_of_cages;
+	cin>>no_of_cages;
+	cage Cage[no_of_cages];
+
+	for (int cage_id = 0; cage_id<no_of_cages; cage_id++) {
+        
+		int cage_sum, no_of_cells;
+		cin >> no_of_cells >> cage_sum;
+        
+		Cage[cage_id].sum = cage_sum;
+		Cage[cage_id].capacity = no_of_cells;
+
+		for (int j=0; j<no_of_cells; j++) {
+			int row, col;
+			cin >> row >> col;
+			Cage[cage_id].cells[j] = row*10 + col;
+			Board[row][col].cage_id = cage_id;
+
+		}
+
+	}
+	if(solve_sudoku(Cage, Board))
+        print_board(Board);
+    else
+        cout<<"Cant solve the give sudoku puzzle :(";
+	return 0;
+}
+
+
+bool solve_sudoku(cage Cage[],cell board[9][9])
+{
+    int row, col;
+    if(!FindUnassignedLocation(board, row, col)) return true;
+    cage currentCage = Cage[board[row][col].cage_id];
+        
+    for (int num=1; num<=9; num++) {
+        if (isSafe(board, Cage, row, col, num)) {
+            board[row][col].value = num;
+            
+            print_board(board);
+            cout<<endl;
+            Sleep(1500);
+            system("cls");
+            
+            if (isCageSumSatisfied(currentCage, board)){
+                
+                solve_sudoku(Cage, board);
+            }
+        }
+        board[row][col].value = 0;
+    }
+    return false;
+
+}
