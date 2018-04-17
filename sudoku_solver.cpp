@@ -20,6 +20,11 @@ struct cage
 struct cell {
 	int value;
 	int cage_id;
+	
+	//constructor
+	cell() {
+		value = 0;
+	}
 };
  
 
@@ -33,11 +38,6 @@ bool isCageSumSatisfied(cage);
 int main() {
 
 	cell Board[9][9];
-
-	//initialize board
-	for (int i=0; i<9; i++)
-		for (int j=0; j<9; j++)
-			Board[i][j].value = 0;
 
 	//read input
 	int no_of_cages;
