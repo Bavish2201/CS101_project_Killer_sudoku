@@ -25,6 +25,12 @@ struct cell {
 	cell() {
 		value = 0;
 	}
+
+    bool isEmpty() {
+        if (value == 0) return true;
+        else return false;
+    }
+
 } Board[9][9];
  
 
@@ -78,7 +84,7 @@ bool FindEmptyCell(int &row, int &col)
 {
     for (row = 0; row < 9; row++)
         for (col = 0; col < 9; col++)
-            if (Board[row][col].value == 0)
+            if (Board[row][col].isEmpty())
                 return true;
     return false;
 }
